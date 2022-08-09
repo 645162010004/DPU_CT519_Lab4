@@ -1,0 +1,38 @@
+Install Docker-Compose
+
+ทำการสร้างไฟล์ Docker-Compose ขึ้นมาโดยใช้ชื่อ docker-compose.yaml แล้วจึงสั่งรัน
+sudo docker-compose up -d
+
+version: '3.9'
+
+services:
+  sv_database:
+    image: mariadb:10.8.3
+    container_name: ctn_mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: dbpassw0rd
+      MARIADB_DATABASE: lab4
+    ports:
+      - "3306:3306"
+
+  sv_adminer:
+    image: adminer
+    container_name: ctn_adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    
+  sv_webserver:
+    image: php:7.2-apache
+    container_name: ctn_php
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www:/var/www/html
+    links:
+      - "sv_database:database"
+
+
+แล้วจึงทำการตรวจสอบ Service ที่เกิดขึ้นผ่านหน้าเว็ปไซต์ 
